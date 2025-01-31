@@ -1,6 +1,8 @@
 import discord
 from discord.message import Message
-from ollama import AsyncClient
+
+# from ollama import AsyncClient
+from openai import AsyncOpenAI
 import json
 import os
 import dotenv
@@ -10,7 +12,15 @@ dotenv.load_dotenv()
 ACC_TOKEN = os.getenv("TOKEN")
 
 # Define your target channel IDs
-TARGET_CHANNELS = [1330237721557471232, 1334351579058405447]  # hideout count  # testing
+AI_CHANNELS = [
+    1330237721557471232,  # Hideout
+    1334351579058405447,  # Testing
+    1330033413524033537,  # SST
+]
+
+COUNT_CHANNELS = [
+    1330237721557471232,  # Hideout
+]
 
 BLOCK_LIST = [159985870458322944, 510016054391734273]
 
@@ -39,26 +49,29 @@ class MyClient(discord.Client):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.messagehistory = {}
+        system_message = {
+            "role": "system",
+            "content": """My name is Lolibaba and my userid is 793266426349748235, that's what people call me. My AI model is Deepseek-r1.
+                When someone <@username>, that means they are calling me out, and I just respond naturally 
+                without mentioning that I was being mentioned. 
+                In the context of messaging, <@username> means mentioning or @-ing a user by their user ID. When there's
+                a message that includes <@username>, I will implicitly understand that a user is being mentioned."""
+        }
         for item in os.listdir():
             if item.endswith(".json"):
-                self.messagehistory[item.split(".")[0]] = self._load_messages_from_file(
+                self.messagehistory[int(item.split(".")[0])] = self._load_messages_from_file(
                     item
                 )
-        for channel in TARGET_CHANNELS:
+        print("Initializing message history...")
+        for channel in AI_CHANNELS:
             if channel not in self.messagehistory:
-                self.messagehistory[channel] = [
-                    {
-                        "role": "system",
-                        "content": """My most important trait is I only make simple response to simple question, and  my user id is 793266426349748235.
-                        My name is Lolibaba, that's what people call me
-                        When someone <@username>, that means they are calling me out, and I just respond naturally 
-                        without mentioning that i was being mentioned. 
-                        In the context of messagging, <@username> means mentioning or @ating a user by their userid. When there's
-                        a message that include <@username>, I will implicitly understand that a user is being mentioned.""",
-                    }
-                ]  # Initialize conversation context
+                self.messagehistory[channel] = [system_message]  # Initialize with the system message
+            else:
+                self.messagehistory[channel][0] = system_message
         print(json.dumps(self.messagehistory, indent=4))
-        self.ollama_client = AsyncClient()  # Initialize Ollama client
+        self.openai_client = AsyncOpenAI(
+            api_key=os.getenv("OPENAI_API_KEY")
+        )  # Initialize Ollama client
 
     def _load_messages_from_file(self, file_path: str) -> list:
         """Load messages from a file. Return an empty list if the file is empty or doesn't exist."""
@@ -100,10 +113,12 @@ class MyClient(discord.Client):
         )
         print(json.dumps(self.messagehistory[channelid], indent=4))
         # Generate response using Ollama
-        response = await self.ollama_client.chat(
-            model="gemma2:2b", messages=self.messagehistory[channelid]
+        response = await self.openai_client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=self.messagehistory[channelid],
+            max_tokens=1000,
         )
-        ret: str = remove_think_content(response["message"]["content"])
+        ret: str = remove_think_content(response.choices[0].message.content.strip())
 
         # Append the tool's response to the conversation history
         self.messagehistory[channelid].append({"role": "system", "content": ret})
@@ -129,11 +144,12 @@ class MyClient(discord.Client):
         if message.author == self.user:
             return  # Ignore bot's own messages
 
-        # Check if the message is from a specific channel and bot is mentioned
-        if message.guild and message.channel.id in TARGET_CHANNELS:
+        if message.guild and message.channel.id in COUNT_CHANNELS:
             if is_positive_number(message.content):  # Counting
                 await message.channel.typing()
                 await message.channel.send(int(round(float(message.content)) + 1))
+
+        if message.guild and message.channel.id in AI_CHANNELS:
             if self.user.mentioned_in(message):  # Generative response
                 if message.author.id in BLOCK_LIST:
                     return
