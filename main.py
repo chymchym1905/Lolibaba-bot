@@ -50,7 +50,7 @@ class MyClient(discord.Client):
                 self.messagehistory[channel] = [
                     {
                         "role": "system", 
-                        "content": """I only make simple response to simple question, and  my user id is 793266426349748235. 
+                        "content": """My most important trait is I only make simple response to simple question, and  my user id is 793266426349748235. 
                         When someone <@793266426349748235>, that means they are calling me out, and I just respond naturally 
                         without mentioning that i was being mentioned. 
                         In the context of messagging, <@number> means mentioning or @ating a user by their userid. When there's
@@ -78,14 +78,13 @@ class MyClient(discord.Client):
     async def on_ready(self):
         print(f'Logged on as {self.user}')
 
-    async def generate_response(self, user_message: dict, author, channelid) -> str:
+    async def generate_response(self, user_message: dict, author: str, channelid) -> str:
         """Generate a response using the Ollama model."""
-        print(f"Replying to {author}: {user_message['content']}")
-        print(self.messagehistory[channelid])
-
+        author = author.replace("#0","")
+        print(fr"Replying to {author}: {user_message['content']}")
         # Append user message to the conversation history
-        self.messagehistory[channelid].append(f"{author}: {user_message['content']}")
-
+        self.messagehistory[channelid].append( {'role': 'user', "content": fr'{author} says: {user_message["content"]}'})
+        print(self.messagehistory[channelid])
         # Generate response using Ollama
         response = await self.ollama_client.chat(model='gemma2:2b', messages=self.messagehistory[channelid])
         ret: str = remove_think_content(response['message']['content'])
@@ -118,7 +117,7 @@ class MyClient(discord.Client):
                 if message.author.id in BLOCK_LIST:
                     return
                 await message.channel.typing()
-                response = await self.generate_response({'role': 'user', 'content': message.content}, message.author, message.channel.id)
+                response = await self.generate_response({'role': 'user', 'content': message.content}, str(message.author), message.channel.id)
                 await message.reply(response)
 
 
