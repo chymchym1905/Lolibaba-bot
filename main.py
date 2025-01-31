@@ -23,7 +23,7 @@ BLOCK_LIST =  [
 import re
 
 def remove_think_content(text):
-    return re.sub(r'<think>.*?</think>\n?', '', text, flags=re.DOTALL)
+    return re.sub(r'\n*<think>.*?</think>\n*', '', text, flags=re.DOTALL)
 
 def is_positive_number(s):
     try:
