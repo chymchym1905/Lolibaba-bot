@@ -7,7 +7,7 @@ import dotenv
 
 dotenv.load_dotenv()
 
-ACC_TOKEN = os.getenv("ACC_TOKEN")
+ACC_TOKEN = os.getenv("TOKEN")
 
 # Define your target channel IDs
 TARGET_CHANNELS = [
@@ -84,7 +84,7 @@ class MyClient(discord.Client):
         print(self.messagehistory[channelid])
 
         # Append user message to the conversation history
-        self.messagehistory[channelid].append(user_message)
+        self.messagehistory[channelid].append(f"{author}: {user_message['content']}")
 
         # Generate response using Ollama
         response = await self.ollama_client.chat(model='gemma2:2b', messages=self.messagehistory[channelid])
@@ -101,7 +101,7 @@ class MyClient(discord.Client):
             self.messagehistory[channelid].pop(1)
 
         print(ret)
-        if is_positive_number(ret) or is_positive_number(ret[0]) or ret.startswith("pi") or ret.startswith("π"):
+        if is_positive_number(ret) or is_positive_number(ret[0]) or ret.lower().startswith("pi") or ret.lower().startswith("π"):
             ret = "Hah, don't think you got me this time: " + ret
         return ret.strip()
 
