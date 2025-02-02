@@ -127,17 +127,11 @@ class MyClient(discord.Client):
         self._save_messages_to_file(f"{channelid}.json", self.messagehistory[channelid])
 
         # Limit the conversation history to 100 messages
-        if len(self.messagehistory[channelid]) > 100:
+        if len(self.messagehistory[channelid]) > 5:
             self.messagehistory[channelid].pop(1)
 
         print(ret)
-        if (
-            is_positive_number(ret)
-            or is_positive_number(ret[0])
-            or ret.lower().startswith("pi")
-            or ret.lower().startswith("π")
-        ):
-            ret = "Hah, don't think you got me this time: " + ret
+        ret = "🗣️ " + ret
         return ret.strip()
 
     async def on_message(self, message: Message):
