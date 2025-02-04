@@ -8,10 +8,9 @@ on:
 jobs: 
   deploy:
     runs-on: ubuntu-latest
-    
     steps:
       - name: deploy on ec2
-      - uses: appleboy/ssh-action@v1.2.0
+      uses: appleboy/ssh-action@v1.2.0
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
