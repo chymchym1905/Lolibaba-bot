@@ -21,5 +21,6 @@ jobs:
             ls -al
             git pull https://chymchym1905:${{ secrets.GH_PAT }}@github.com/chymchym1905/Lolibaba-bot.git main
             source lolibaba-venv/bin/activate
-            pip install -r -U requirements.txt
-            nohup python3 main.py > output.log &
+            pip install -U -r requirements.txt
+            pkill python3
+            nohup python3 main.py > output.log 2>&1 &
