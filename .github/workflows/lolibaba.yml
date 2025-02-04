@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy on EC2
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+        uses: appleboy/ssh-action@master
+        with: 
           host: ${{ secrets.REMOTE_HOST }}
           username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/ubuntu/Lolibaba-bot
             ls -al
