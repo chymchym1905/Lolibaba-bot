@@ -18,5 +18,5 @@ jobs:
         cd /home/ubuntu/Lolibaba-bot
         ls -al
         git pull https://chymchym1905:${{ secrets.GH_PAT }}@github.com/chymchym1905/Lolibaba-bot.git main
-        pip install -r requirements.txt
+        pip install -r -U requirements.txt
         nohup python3 main.py > output.log &
