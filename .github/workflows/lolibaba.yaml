@@ -1,0 +1,22 @@
+name: Lolibaba CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs: 
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    uses: appleboy/ssh-action@v1.2.0
+    with:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+      REMOTE_USER: ${{ variables.EC2USER }}
+      script: |
+        cd /home/ubuntu/Lolibaba-bot
+        ls -al
+        git pull https://chymchym1905:${{ secrets.GH_PAT }}@github.com/chymchym1905/Lolibaba-bot.git main
+        pip install -r requirements.txt
+        nohup python3 main.py > output.log &

@@ -1,4 +1,5 @@
 .env
+.pat
 *.json
 __pycache__/*
 test.py
