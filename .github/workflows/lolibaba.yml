@@ -10,15 +10,15 @@ jobs:
     name: Deployment
     runs-on: ubuntu-latest
     steps:
-      - name: deploy on ec2
-      - uses: appleboy/ssh-action@v1.2.0
-      with:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-        REMOTE_USER: ${{ variables.EC2USER }}
-        script: |
-          cd /home/ubuntu/Lolibaba-bot
-          ls -al
-          git pull https://chymchym1905:${{ secrets.GH_PAT }}@github.com/chymchym1905/Lolibaba-bot.git main
-          pip install -r -U requirements.txt
-          nohup python3 main.py > output.log &
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: $EC2USER
+          script: |
+            cd /home/ubuntu/Lolibaba-bot
+            ls -al
+            git pull https://chymchym1905:${{ secrets.GH_PAT }}@github.com/chymchym1905/Lolibaba-bot.git main
+            pip install -r -U requirements.txt
+            nohup python3 main.py > output.log &
