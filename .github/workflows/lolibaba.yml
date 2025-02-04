@@ -15,7 +15,7 @@ jobs:
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           host: ${{ secrets.REMOTE_HOST }}
-          username: $EC2USER
+          username: ubuntu
           script: |
             cd /home/ubuntu/Lolibaba-bot
             ls -al
