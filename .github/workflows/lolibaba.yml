@@ -14,7 +14,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with: 
           host: ${{ secrets.REMOTE_HOST }}
-          username: $EC2USER
+          username: ${{ vars.EC2USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/ubuntu/Lolibaba-bot
