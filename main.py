@@ -1,8 +1,6 @@
 import discord
 from discord.message import Message
 import asyncio
-import numexpr
-
 # from ollama import AsyncClient
 from openai import AsyncOpenAI
 import json
@@ -97,7 +95,8 @@ class MyClient(discord.Client):
                 self.messagehistory[channel][0] = (
                     personality if channel == 1330033413524033537 else system_message
                 )
-        print(json.dumps(self.messagehistory, indent=4))
+        for channel in self.messagehistory:
+            print(f"Channel {channel} has {len(self.messagehistory[channel])} messages")
         self.openai_client = AsyncOpenAI(
             api_key=os.getenv("OPENAI_API_KEY")
         )  # Initialize Ollama client
@@ -150,7 +149,7 @@ class MyClient(discord.Client):
             {"role": "user", "content": rf'{author} says: {user_message["content"]}'}
         )
         print(json.dumps(self.messagehistory[channelid], indent=4))
-        
+        print(f"Channel {channelid} has {len(self.messagehistory[channelid])} messages")
         response = await self.openai_client.chat.completions.create(
             model="gpt-4o-mini",
             messages=self.messagehistory[channelid],
