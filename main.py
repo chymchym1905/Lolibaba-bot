@@ -21,7 +21,7 @@ AI_CHANNELS = [
 
 COUNT_CHANNELS = [
     1330237721557471232,  # Hideout
-    1334351579058405447,  # Testing
+    # 1334351579058405447,  # Testing
     # 1330033413524033537,  # SST
 ]
 
@@ -164,9 +164,8 @@ class MyClient(discord.Client):
             self.messagehistory[channelid] = [self.messagehistory[channelid][0]] + self.messagehistory[channelid][-99:]
 
         print(ret)
-        ret = "🗣️ " + ret
-        def split_message(content, max_length=2000):
-            return [content[i:i + max_length] for i in range(0, len(content), max_length)]
+        def split_message(content, max_length=1990):
+            return ["🗣️ " + content[i:i + max_length] for i in range(0, len(content), max_length)]
         chunks = split_message(ret)
         for i in chunks:
             await message.reply(i)
