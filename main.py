@@ -218,7 +218,7 @@ class MyClient(discord.Client):
 
                 try:
                     msg: Message = await self.wait_for(
-                        "message", timeout=random.uniform(0.0, 1.0), check=check_next
+                        "message", timeout=random.uniform(1.5,1.6), check=check_next
                     )
                     if is_positive_number(msg.content):
                         raise ValueError(f"{msg.author} counted: {msg.content}")
