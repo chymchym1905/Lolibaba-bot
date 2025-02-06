@@ -227,7 +227,7 @@ class MyClient(discord.Client):
                 # except asyncio.TimeoutError:
                 #     pass
 
-                await message.channel.typing()
+                # await message.channel.typing()
                 await message.channel.send(int(round(float(eval(message.content))) + 1))
             
 
