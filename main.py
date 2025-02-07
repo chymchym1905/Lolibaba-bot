@@ -182,11 +182,11 @@ class MyClient(discord.Client):
         if message.guild and message.channel.id in COUNT_CHANNELS:
             if is_positive_number(message.content):  # Count from this message
 
-                # def check(reaction, user):
-                #     return str(user) == "counting#5250" and str(reaction.emoji) in [
-                #         "\N{HUNDRED POINTS SYMBOL}",
-                #         "\N{WHITE HEAVY CHECK MARK}",
-                #     ]
+                def check(reaction, user):
+                    return str(user) == "counting#5250" and str(reaction.emoji) in [
+                        "\N{HUNDRED POINTS SYMBOL}",
+                        "\N{WHITE HEAVY CHECK MARK}",
+                    ]
 
                 def check_next(msg: Message):
                     if msg.author == self.user:
@@ -200,12 +200,12 @@ class MyClient(discord.Client):
                         return True
                     return False
 
-                # try:
-                #     reaction, user = await self.wait_for(
-                #         "reaction_add", timeout=10.0, check=check
-                #     )
-                # except Exception as e:
-                #     return
+                try:
+                    reaction, user = await self.wait_for(
+                        "reaction_add", timeout=2.0, check=check
+                    )
+                except Exception as e:
+                    return
 
                 # try:
                 #     msg: Message = await self.wait_for(
