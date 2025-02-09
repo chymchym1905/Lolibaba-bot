@@ -24,3 +24,4 @@ jobs:
             pip install -U -r requirements.txt
             pkill python3
             nohup python3 main.py > output.log 2>&1 &
+            ps aux | grep main.py
