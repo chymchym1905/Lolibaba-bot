@@ -202,7 +202,7 @@ class MyClient(discord.Client):
 
                 try:
                     reaction, user = await self.wait_for(
-                        "reaction_add", timeout=2.0, check=check
+                        "reaction_add", timeout=10.0, check=check
                     )
                 except Exception as e:
                     return
