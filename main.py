@@ -184,9 +184,9 @@ class MyClient(discord.Client):
 
                 def check(reaction, user):
                     return str(user) == "counting#5250" and str(reaction.emoji) in [
-                        "\N{HUNDRED POINTS SYMBOL}",
-                        "\N{WHITE HEAVY CHECK MARK}",
-                        "\N{BALLOT BOX WITH CHECK}"
+                        "💯",
+                        "✅",
+                        "☑️"
                     ]
 
                 def check_next(msg: Message):
